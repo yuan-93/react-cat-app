@@ -25,7 +25,7 @@ function Home() {
 		if (breedId) {
 			setSelectedBreedId(breedId);
 		}
-	}, []);
+	}, [searchParams]);
 
 	React.useEffect(() => {
 		listBreeds();
