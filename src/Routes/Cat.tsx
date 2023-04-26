@@ -13,11 +13,7 @@ function Cat() {
 	const { getCat, cat } = useCat();
 
 	const onBack = () => {
-		if (cat) {
-			navigate(`/?breed_id=${cat.breeds[0].id}`);
-		} else {
-			navigate("/");
-		}
+		navigate(-1);
 	};
 
 	React.useEffect(() => {
@@ -28,9 +24,6 @@ function Cat() {
 
 	return (
 		<Stack className="col-md-6 mx-auto my-5">
-			{/* <Link to="/" className="mb-2">
-				<Button>Back</Button>
-			</Link> */}
 			<Button className="col-sm-2 mb-2" onClick={onBack}>
 				Back
 			</Button>

@@ -15,7 +15,7 @@ export interface ICatContextProps {
 	errorMessage: string | undefined;
 	getCat: (props: { id: string; imageSize: "small" | "med" | "full" }) => void;
 	listCats: (props: {
-		breedIds: string[];
+		breedId: string;
 		imageSize: "small" | "med" | "full";
 		order: "ASC" | "DESC" | "RAND";
 		page: number;
@@ -50,9 +50,7 @@ export function CatProvider({ children }: { children?: React.ReactNode }) {
 	const [loading, setLoading] = React.useState<boolean>(false);
 	const [endOfPage, setEndOfPage] = React.useState<boolean>(false);
 	const [errorMessage, setErrorMessage] = React.useState<string | undefined>();
-	const [selectedBreedId, setSelectedBreedId] = React.useState<
-		string | undefined
-	>();
+	const [currentBreedId, setCurrentBreedId] = React.useState<string>();
 
 	const getCat = async (props: {
 		id: string;
@@ -71,28 +69,41 @@ export function CatProvider({ children }: { children?: React.ReactNode }) {
 	};
 
 	const listCats = async (props: {
-		breedIds: string[];
+		breedId: string;
 		imageSize: "small" | "med" | "full";
 		order: "ASC" | "DESC" | "RAND";
 		page: number;
 		limit: number;
 	}) => {
 		try {
-			const { breedIds, imageSize, order, page, limit } = props;
+			const { breedId, imageSize, order, page, limit } = props;
 			if (endOfPage) {
 				return;
 			}
+			if (currentBreedId === breedId && endOfPage) {
+				return;
+			}
+			if (Boolean(cats[page * limit])) {
+				return;
+			}
+
 			setLoading(true);
 			setErrorMessage(undefined);
 			const newCats = await catApi.listCats({
-				breedIds,
+				breedIds: [breedId],
 				limit,
 				page,
 				imageSize,
 				order,
 			});
+
 			if (newCats.length > 0) {
-				setCats(cats.concat(newCats));
+				if (currentBreedId !== breedId) {
+					setCurrentBreedId(breedId);
+					setCats(newCats);
+				} else {
+					setCats(cats.concat(newCats));
+				}
 				if (newCats.length < limit) {
 					setEndOfPage(true);
 				}

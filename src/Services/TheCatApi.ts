@@ -88,9 +88,9 @@ export default class CatApi {
 			});
 
 			if (response.ok) {
-				const breeds = await response.json();
+				const cats = await response.json();
 
-				return breeds;
+				return cats;
 			} else {
 				throw new Error(response.statusText);
 			}
