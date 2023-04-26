@@ -17,7 +17,7 @@ function Home() {
 
 	const limit = 5;
 	const [page, setPage] = React.useState<number>(
-		Math.floor(cats.length / limit)
+		Math.max(Math.floor(cats.length / limit) - 1, 0)
 	);
 
 	React.useEffect(() => {
